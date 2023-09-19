@@ -2,18 +2,35 @@ const http = require("http");
 
 const PORT = 3000;
 
-const server = http.createServer((req, res) => {
-  if (req.url === "/friends") {
+const friends = [
+  {
+    id: 0,
+    name: "A",
+  },
+  {
+    id: 1,
+    name: "B",
+  },
+  {
+    id: 2,
+    name: "C",
+  },
+];
+
+const server = http.createServer();
+server.on("request", (req, res) => {
+  const items = req.url.split("/");
+  if (items[1] === "friends") {
     res.writeHead(200, {
       "Content-Type": "application/json",
     });
-    res.end(
-      JSON.stringify({
-        id: 1,
-        name: "Harshita",
-      })
-    );
-  } else if (req.url === "/messages") {
+    if (items.length === 3) {
+      const i = Number(items[2]);
+      res.end(JSON.stringify(friends[i]));
+    } else {
+      res.end(JSON.stringify(friends));
+    }
+  } else if (items[1] === "messages") {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/html");
     res.write("<html>");
